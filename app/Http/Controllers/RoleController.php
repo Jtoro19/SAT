@@ -6,59 +6,64 @@ use Illuminate\Http\Request;
 
 class RoleController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
     public function index()
     {
-        //
+        $roles = Role::all();
+        return view('roles.index', ['roles' => $roles]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+    public function showRegistrationForm()
+    {
+    // Fetch roles from the database
+    $roles = Role::all();
+
+    // Pass roles to the view
+    return view('auth.register')->with('roles', $roles);
+    }
+
     public function create()
     {
-        //
+        return view('');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $role = new Role();
+        $role->roleName = $request->roleName;
+        $role->label = $request->label;
+        $role->description = $request->description;
+        $role->able=1;
+        $role->save();
+        return redirect()->route('roles.index');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function show($id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function edit($id)
     {
-        //
+        $role = Role::find($id);
+        return view('roles.edit', ['role' => $role]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        $role = Role::find($id);
+        $role->roleName = $request->roleName;
+        $role->label = $request->label;
+        $role->description = $request->description;
+        $role->save();
+        return redirect()->route('roles.index');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
+        $role = Role::find($id);
+        $role->able=0;
+        $role->save();
+        return redirect()->route('');
     }
 }
