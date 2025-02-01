@@ -80,6 +80,5 @@ class AlertsController extends Controller
 
         $receipt=Receipt::find($id);
         $pdf = \PDF::loadView('reportsU.users.downloadReceiptPDF', compact('receipt'));
-        return $pdf->download('receipt.pdf');
     }
 }
