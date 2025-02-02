@@ -19,6 +19,24 @@ use Illuminate\Support\Facades\Route;
 // });
 
 
+Route::get('/analystMap', function() {
+    return view('/analystMap');
+});
+
+Route::get('/monitoringCenter', function() {
+    return view('/monitoringCenter');
+});
+
+Route::get('/precipitation', function() {
+    return view('/precipitation');
+});
+
+Route::get('/userMap', function() {
+    return view('/userMap');
+});
+
+
+
 Route::get('/', function () {
     return view('welcome');
 });
