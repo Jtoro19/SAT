@@ -8,78 +8,47 @@ class ReportsController extends Controller
 {
     public function index()
     {
-        $receipts = Receipt::all();
-        return view('receipts.index', ['receipts' => $receipts]);
-    }
-
-    public function create()
-    {
-        
+        $reports = Report::all();
+        return view('reports.index', ['reports' => $reports]);
     }
 
     public function store(Request $request)
     {
-        // Validar los datos
-        $request->validate([
-            'totalPrice' => 'required|numeric',
-            'date' => 'required|date',
-            'productID' => 'required|exists:products,id', // Asegura que el producto existe
-            'quantity' => 'required|integer|min:1',
-            'addressID' => 'required|exists:addresses,id', // Asegura que la dirección existe
-            'recipientName' => 'required|string|max:255',
-        ]);
-    
-        // Crear el recibo
-        $receipt = new Receipt();
-        $receipt->totalPrice = $request->totalPrice;
-        $receipt->date = $request->date;
-        $receipt->save();
-    
-        // Crear el ítem asociado
-        $item = new Item();
-        $item->productID = $request->productID;
-        $item->receiptID = $receipt->id; // Usamos el ID del recibo recién creado
-        $item->quantity = $request->quantity;
-        $item->save();
-    
-        // Crear el envío asociado
-        $shipment = new Shipment();
-        $shipment->userID = Auth::id(); // Usuario autenticado
-        $shipment->addressID = $request->addressID;
-        $shipment->receiptID = $receipt->id; // Usamos el ID del recibo
-        $shipment->departureDate = now()->addDays(2); // Valor por defecto
-        $shipment->deliveryDate = now()->addDays(15); // Valor por defecto
-        $shipment->status = 'En proceso'; // Valor por defecto
-        $shipment->cost = 9.99; // Valor por defecto
-        $shipment->recipientName = $request->recipientName;
-        $shipment->save();
-    
-        // Redirigir a la ruta 'receipts.info' con el ID del recibo
-        return redirect()->route('receipts.info', ['id' => $receipt->id])->with('success', 'Compra, ítem y envío creados exitosamente.');
+        $report = new Report();
+        $report->stationID = $request->stationID;
+        $report->date = $request->date;
+        $report->quantity = $request->quantity;
+        $report->able = 1;
+        $report->save();
+        return redirect()->route('reports.index');
     }
 
-
-    public function showInfo($id)
+    public function show($id)
     {
-        $receipt = Receipt::find($id);
-    
-        if (!$receipt) {
-            return redirect()->route('receipts.index')->with('error', 'Recibo no encontrado.');
-        }
-    
-        $item = Item::where('receiptID', $receipt->id)->first();
-    
-        $shipment = Shipment::where('receiptID', $receipt->id)->first();
-    
-        return view('receipts.info', ['receipt' => $receipt, 'item' => $item, 'shipment' => $shipment]);
+        //
     }
 
-    public function receiptPDF($id)
+    public function edit($id)
     {
-        set_time_limit(300);
+        $report = Report::find($id);
+        return view('reports.edit', ['report' => $report]);
+    }
 
-        $receipt=Receipt::find($id);
-        $pdf = \PDF::loadView('reportsU.users.downloadReceiptPDF', compact('receipt'));
-        return $pdf->download('receipt.pdf');
+    public function update(Request $request, $id)
+    {
+        $report = Report::find($id);
+        $report->stationID = $request->stationID;
+        $report->date = $request->date;
+        $report->quantity = $request->quantity;
+        $report->save();
+        return redirect()->route('reports.index');
+    }
+
+    public function destroy($id)
+    {
+        $report = Report::find($id);
+        $report->able=0;
+        $report->save();
+        return redirect()->route('reports.index');
     }
 }

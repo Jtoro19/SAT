@@ -11,13 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('limni_stations', function (Blueprint $table) {
+        Schema::create('hidro_stations', function (Blueprint $table) {
             $table->id();
-
             $table->unsignedBigInteger('stationID');
             $table->foreign('stationID')->references('id')->on('stations');
-
-            $table->float('streamVolume');
+            $table->float('temperature');
+            $table->float('humidity');
+            $table->float('atmosphericPressure');
             $table->timestamps();
         });
     }
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('limnistations');
+        Schema::dropIfExists('hidrostations');
     }
 };
