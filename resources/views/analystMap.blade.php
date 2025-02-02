@@ -7,13 +7,13 @@
 </head>
 <header>
     <h1>SAT MANIZALES</h1>
-    <h3>Tenemos estaciones hidrometeorológicas en toda la ciudad</h3>
+    <h3>Tenemos estaciones en toda la ciudad</h3>
 </header>
 <div class="contenedor">
     <aside>
-        <button class="btn">VER ESTACIONES</button>
+        <!-- <button class="btn">VER ESTACIONES</button> -->
         <button class="btn" onclick="window.location.href='/reports/index'">MUESTRAS</button>
-        <select id="categoria">
+        <!-- <select id="categoria">
             <option value="pluviometricas">Pluviométricas</option>
             <option value="limnimetricas">Limnimétricas</option>
             <option value="hidrometeorologicas">Hidrometeorológicas</option>
@@ -23,8 +23,8 @@
             <option value="AMARILLA">AMARILLA</option>
             <option value="NARANJA">NARANJA</option>
             <option value="ROJA">ROJA</option>
-        </select>
-        <button class="btn" onclick="window.location.href='/alerts/index'">CENTRO DE NOTIFICACION</button>
+        </select> -->
+        <button class="btn" onclick="window.location.href='/alerts/index'">CENTRO DE NOTIFICACIÓN</button>
     </aside>
     <main>
         <div id="map"></div>
