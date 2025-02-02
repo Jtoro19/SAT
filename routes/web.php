@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ReportsController;
+use App\Http\Controllers\AlertsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,3 +42,18 @@ Route::get('/userMap', function() {
 Route::get('/', function () {
     return view('welcome');
 });
+
+
+Route::get('/reports/index', [ReportsController::class, 'index'])->name('reports.index');
+
+
+Route::get('/alerts/index', [AlertsController::class, 'index'])->name('alerts.index');
+
+
+Route::post('alerts/store', [AlertsController::class, 'store'])->name('alerts.store');
+Route::get('alerts/edit/{id}', [AlertsController::class, 'edit'])->name('alerts.edit');
+Route::post('alerts/update/{id}', [AlertsController::class, 'update'])->name('alerts.update');
+Route::delete('alerts/destroy/{id}', [AlertsController::class, 'destroy'])->name('alerts.destroy');
+
+Route::get('alerts/create/{reportID}', [AlertsController::class, 'create'])->name('alerts.create');
+

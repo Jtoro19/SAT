@@ -3,14 +3,15 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Report;
 
 class ReportsController extends Controller
 {
     public function index()
     {
-        $reports = Report::all();
+        $reports = Report::with('alerts')->get();
         return view('reports.index', ['reports' => $reports]);
-    }
+    }    
 
     public function store(Request $request)
     {

@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Alert extends Model
 {
     use HasFactory;
+
+    protected $table = 'alerts'; // Nombre de la tabla en la base de datos
+
+    protected $fillable = ['reportID', 'type', 'alertIntensity'];
 }
+

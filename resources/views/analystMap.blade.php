@@ -12,7 +12,7 @@
 <div class="contenedor">
     <aside>
         <button class="btn">VER ESTACIONES</button>
-        <button class="btn" onclick="window.location.href='../Monitoreo/tablaprecipitacion.html'">MUESTRAS</button>
+        <button class="btn" onclick="window.location.href='/reports/index'">MUESTRAS</button>
         <select id="categoria">
             <option value="pluviometricas">Pluviométricas</option>
             <option value="limnimetricas">Limnimétricas</option>
@@ -24,7 +24,7 @@
             <option value="NARANJA">NARANJA</option>
             <option value="ROJA">ROJA</option>
         </select>
-        <button class="btn" onclick="window.location.href='../Monitoreo/centroDemonitoreo.html'"">CENTRO DE NOTIFICACION</button>
+        <button class="btn" onclick="window.location.href='/alerts/index'">CENTRO DE NOTIFICACION</button>
     </aside>
     <main>
         <div id="map"></div>
