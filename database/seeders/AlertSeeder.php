@@ -15,7 +15,7 @@ class AlertSeeder extends Seeder
     {
         for ($i = 1; $i <= 5; $i++) {
             Alert::create([
-                'reportID' => rand(1, 10),
+                'reportID' => $i,
                 'type' => rand(1, 3),
                 'alertIntensity' => rand(1, 10)
             ]);
