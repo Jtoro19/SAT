@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('pluviometric_stations', function (Blueprint $table) {
+        Schema::create('pluviometricstations', function (Blueprint $table) {
             $table->id();
 
             $table->unsignedBigInteger('stationID');

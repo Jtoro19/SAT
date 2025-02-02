@@ -11,10 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('hidro_stations', function (Blueprint $table) {
+        Schema::create('hidrostations', function (Blueprint $table) {
             $table->id();
+
             $table->unsignedBigInteger('stationID');
             $table->foreign('stationID')->references('id')->on('stations');
+
             $table->float('temperature');
             $table->float('humidity');
             $table->float('atmosphericPressure');

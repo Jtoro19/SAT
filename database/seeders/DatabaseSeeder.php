@@ -12,15 +12,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->call([
-            RoleSeeder::class,
-            UserSeeder::class,
-            StationSeeder::class,
-            ReportSeeder::class,
-            AlertSeeder::class,
-            HidroStationSeeder::class,
-            LimniStationSeeder::class,
-            PluviometricStationSeeder::class,
-        ]);
+        // \App\Models\User::factory(10)->create();
+
+        // \App\Models\User::factory()->create([
+        //     'name' => 'Test User',
+        //     'email' => 'test@example.com',
+        // ]);
     }
 }
