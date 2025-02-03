@@ -29,7 +29,7 @@
                             <th>ID</th>
                             <th>Estación ID</th>
                             <th>Fecha</th>
-                            <th>Cantidad</th>
+                            <th>Cantidad (mm³)</th>
                             <th>Notificación</th>
                         </tr>
                     </thead>
