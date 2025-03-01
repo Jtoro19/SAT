@@ -21,6 +21,9 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'address',  // 🔹 AGREGADO
+        'phoneNumber',  // 🔹 AGREGADO
+        'roleID',  // 🔹 AGREGADO (si también lo usas)
     ];
 
     /**
