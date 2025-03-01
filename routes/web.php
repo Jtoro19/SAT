@@ -9,7 +9,7 @@ use App\Http\Controllers\UsersController;
 
 // Página de inicio
 Route::get('/', function () {
-    return view('welcome');
+    return view('inicio');
 });
 
 // Dashboard (requiere autenticación)
