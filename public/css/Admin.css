@@ -6,6 +6,11 @@
     font-family: Arial, sans-serif;
 }
 
+/* Asegurar que el cuerpo y el HTML ocupen el 100% de la altura */
+html, body {
+    height: 100%;
+}
+
 /* Contenedor superior con la imagen */
 .header {
     width: 100%;
@@ -25,6 +30,10 @@
     color: white;
     text-align: center;
     padding: 40px 20px;
+    height: 50vh; /* Ocupa la mitad inferior */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 /* Título */
