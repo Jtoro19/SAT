@@ -1,8 +1,7 @@
 <?php
 
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ReportsController;
-use App\Http\Controllers\AlertsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,45 +14,18 @@ use App\Http\Controllers\AlertsController;
 |
 */
 
-
-// Route::get('/products/info', function() {
-//     return view('/products/info');
-// });
-
-
-Route::get('/analystMap', function() {
-    return view('/analystMap');
-});
-
-Route::get('/monitoringCenter', function() {
-    return view('/monitoringCenter');
-});
-
-Route::get('/precipitation', function() {
-    return view('/precipitation');
-});
-
-Route::get('/userMap', function() {
-    return view('/userMap');
-});
-
-
-
 Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('/reports/index', [ReportsController::class, 'index'])->name('reports.index');
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
 
-
-Route::get('/alerts/index', [AlertsController::class, 'index'])->name('alerts.index');
-
-
-Route::post('alerts/store', [AlertsController::class, 'store'])->name('alerts.store');
-Route::get('alerts/edit/{id}', [AlertsController::class, 'edit'])->name('alerts.edit');
-Route::post('alerts/update/{id}', [AlertsController::class, 'update'])->name('alerts.update');
-Route::delete('alerts/destroy/{id}', [AlertsController::class, 'destroy'])->name('alerts.destroy');
-
-Route::get('alerts/create/{reportID}', [AlertsController::class, 'create'])->name('alerts.create');
-
+require __DIR__.'/auth.php';
