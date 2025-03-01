@@ -6,11 +6,12 @@ use App\Http\Controllers\AlertsController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\UsersController;
+use App\Http\Middleware\RoleMiddleware;
 
-// Página de inicio
+// Página de inicio (acceso libre)
 Route::get('/', function () {
     return view('inicio');
-});
+})->name('inicio');
 
 // Dashboard (requiere autenticación)
 Route::get('/dashboard', function () {
@@ -19,64 +20,67 @@ Route::get('/dashboard', function () {
 
 // Rutas protegidas por autenticación
 Route::middleware('auth')->group(function () {
+
+    // Perfil
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // 🔹 **ALERTS** (Employee)
+    Route::middleware(['role:Employee'])->group(function () {
+        Route::get('/alerts/index', [AlertsController::class, 'index'])->name('alerts.index');
+        Route::post('/alerts/store', [AlertsController::class, 'store'])->name('alerts.store');
+        Route::get('/alerts/edit/{id}', [AlertsController::class, 'edit'])->name('alerts.edit');
+        Route::post('/alerts/update/{id}', [AlertsController::class, 'update'])->name('alerts.update');
+    });
+
+    // 🔹 **REPORTS** (Employee)
+    Route::middleware(['role:Employee'])->group(function () {
+        Route::get('/reports/index', [ReportsController::class, 'index'])->name('reports.index');
+    });
+
+    // 🔹 **USERS** (Administrator)
+    Route::middleware(['role:Administrator'])->group(function () {
+        Route::get('/users/index', [UsersController::class, 'index'])->name('users.index');
+        Route::get('/users/{id}/edit', [UsersController::class, 'edit'])->name('users.edit');
+    });
+
+    // 🔹 **NOTIFICATIONS** (Viewer)
+    Route::middleware(['role:Viewer'])->group(function () {
+        Route::get('/notifications/userNotifications', function () {
+            return view('notifications.userNotifications');
+        });
+    });
+
+    // 🔹 **VISTAS SEGÚN ROL**
+    Route::middleware(['role:Administrator'])->group(function () {
+        Route::get('/adminMap', function () {
+            return view('adminMap');
+        });
+        Route::get('/adminView', function () {
+            return view('adminView');
+        });
+    });
+
+    Route::middleware(['role:Employee'])->group(function () {
+        Route::get('/analystMap', function () {
+            return view('analystMap');
+        });
+        Route::get('/monitoringCenter', function () {
+            return view('monitoringCenter');
+        });
+        Route::get('/precipitation', function () {
+            return view('precipitation');
+        });
+    });
+
+    Route::middleware(['role:Viewer'])->group(function () {
+        Route::get('/userMap', function () {
+            return view('userMap');
+        });
+    });
+
 });
 
-// Rutas para el registro de usuarios
-Route::get('/register', [RegisteredUserController::class, 'create'])->name('register');
-Route::post('/register', [RegisteredUserController::class, 'store']);
-
-// Rutas de vistas personalizadas
-Route::get('/analystMap', function() {
-    return view('analystMap');
-});
-
-Route::get('/adminMap', function() {
-    return view('adminMap');
-});
-
-Route::get('/monitoringCenter', function() {
-    return view('monitoringCenter');
-});
-
-Route::get('/precipitation', function() {
-    return view('precipitation');
-});
-
-Route::get('/userMap', function() {
-    return view('userMap');
-});
-
-Route::get('/notifications/userNotifications', function() {
-    return view('notifications.userNotifications');
-});
-
-Route::get('/adminView', function() {
-    return view('adminView');
-});
-
-
-// Rutas de ReportsController
-Route::get('/reports/index', [ReportsController::class, 'index'])->name('reports.index');
-
-// Rutas de UsersController
-Route::get('/users/index', [UsersController::class, 'index'])->name('users.index');
-
-Route::get('/users', [UsersController::class, 'index'])->name('users.index');
-Route::get('/users/{id}/edit', [UsersController::class, 'edit'])->name('users.edit');
-Route::put('/users/{id}', [UsersController::class, 'update'])->name('users.update');
-Route::delete('/users/{id}', [UsersController::class, 'destroy'])->name('users.destroy');
-
-// Rutas de AlertsController
-Route::get('/alerts/index', [AlertsController::class, 'index'])->name('alerts.index');
-Route::post('/alerts/store', [AlertsController::class, 'store'])->name('alerts.store');
-Route::get('/alerts/edit/{id}', [AlertsController::class, 'edit'])->name('alerts.edit');
-Route::post('/alerts/update/{id}', [AlertsController::class, 'update'])->name('alerts.update');
-Route::delete('/alerts/destroy/{id}', [AlertsController::class, 'destroy'])->name('alerts.destroy');
-Route::get('/alerts/create/{reportID}', [AlertsController::class, 'create'])->name('alerts.create');
-
-// Incluir las rutas de autenticación generadas por Breeze
 require __DIR__.'/auth.php';
 
