@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class UsersController extends Controller
 {
@@ -14,73 +16,74 @@ class UsersController extends Controller
 
     public function create()
     {
-        return view('');
+        return view('users.create'); // Asegúrate de tener esta vista
     }
 
     public function store(Request $request)
     {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email',
+            'address' => 'nullable|string|max:255',
+            'phoneNumber' => 'nullable|string|max:20',
+            'roleID' => 'required|integer',
+            'password' => 'required|min:8' // Se asegura que la contraseña no sea nula
+        ]);
+
         $user = new User();
         $user->roleID = $request->roleID;
         $user->name = $request->name;
         $user->email = $request->email;
         $user->address = $request->address;
-        $user->password = $request->password;
         $user->phoneNumber = $request->phoneNumber;
-        $user->able=1;
+        $user->password = Hash::make($request->password); // Se encripta la contraseña
         $user->save();
-        return redirect()->route('users.index');
-    }
 
-    public function show($id)
-    {
-        //
+        return redirect()->route('users.index')->with('success', 'Usuario creado correctamente.');
     }
 
     public function edit($id)
     {
-        $user = User::find($id);
+        $user = User::findOrFail($id);
         return view('users.edit', ['user' => $user]);
     }
 
     public function update(Request $request, $id)
     {
-        $user = user::find($id);
-        //$User->roleID = $request->roleID;
-        // $user->userName = $request->userName;
-        // $user->nickname = $request->nickname;
-        // $user->email = $request->email;
-        // $user->password = $request->password;
-        // $user->phoneNumber = $request->phoneNumber;
+        $user = User::findOrFail($id);
+    
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email,' . $id,
+            'address' => 'nullable|string|max:255',
+            'phoneNumber' => 'nullable|string|max:20',
+            'roleID' => 'required|integer',
+            'password' => 'nullable|min:8'  // Permite contraseña vacía
+        ]);
 
+        // Actualizar datos del usuario
         $user->name = $request->name;
         $user->email = $request->email;
         $user->address = $request->address;
-        $user->password = $request->password;
         $user->phoneNumber = $request->phoneNumber;
-        $user->save();
-        return redirect()->route('users.index');
-    }
+        $user->roleID = $request->roleID;
 
+        // Si el usuario ingresó una nueva contraseña, la actualizamos
+        if ($request->filled('password')) {
+            $user->password = Hash::make($request->password);
+        }
+
+        $user->save();
+
+        return redirect()->route('users.index')->with('success', 'Usuario actualizado correctamente.');
+    }
 
     public function destroy($id)
     {
-        // Encuentra al usuario por su ID
-        $user = User::find($id);
-        
-        // Deshabilita el usuario
-        $user->able = 0;
-        $user->save();
-    
-        // // Verifica si el usuario eliminado es el mismo que está autenticado
-        // if (Auth::check() && Auth::id() == $user->id) {
-        //     // Cierra la sesión del usuario autenticado
-        //     Auth::logout();
-    
-        //     // Redirige a la página de inicio después de cerrar la sesión
-        //     return redirect()->route('inicio')->with('status', 'Tu cuenta ha sido desactivada.');
-        // }
-    
-        // // Redirige al índice de usuarios si no es el usuario autenticado
-        // return redirect()->route('users.index')->with('status', 'El usuario ha sido desactivado.');
+        $user = User::findOrFail($id);
+        $user->delete();
+
+        return redirect()->route('users.index')->with('success', 'Usuario eliminado correctamente.');
     }
 }
+

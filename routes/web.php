@@ -5,6 +5,7 @@ use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\AlertsController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\UsersController;
 
 // Página de inicio
 Route::get('/', function () {
@@ -32,6 +33,10 @@ Route::get('/analystMap', function() {
     return view('analystMap');
 });
 
+Route::get('/adminMap', function() {
+    return view('adminMap');
+});
+
 Route::get('/monitoringCenter', function() {
     return view('monitoringCenter');
 });
@@ -44,8 +49,25 @@ Route::get('/userMap', function() {
     return view('userMap');
 });
 
+Route::get('/notifications/userNotifications', function() {
+    return view('notifications.userNotifications');
+});
+
+Route::get('/adminView', function() {
+    return view('adminView');
+});
+
+
 // Rutas de ReportsController
 Route::get('/reports/index', [ReportsController::class, 'index'])->name('reports.index');
+
+// Rutas de UsersController
+Route::get('/users/index', [UsersController::class, 'index'])->name('users.index');
+
+Route::get('/users', [UsersController::class, 'index'])->name('users.index');
+Route::get('/users/{id}/edit', [UsersController::class, 'edit'])->name('users.edit');
+Route::put('/users/{id}', [UsersController::class, 'update'])->name('users.update');
+Route::delete('/users/{id}', [UsersController::class, 'destroy'])->name('users.destroy');
 
 // Rutas de AlertsController
 Route::get('/alerts/index', [AlertsController::class, 'index'])->name('alerts.index');
