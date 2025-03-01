@@ -49,6 +49,7 @@
     </header>
     <div class="contenedor">
         <aside>
+            <button class="btn" onclick="window.location.href='/notifications/userNotifications'">NOTIFICACIONES</button>
             <button class="btn"onclick="alternarModo()">MODO OSCURO/CLARO</button>
             <button class="btn" onclick="alternarStreetView()">VISTA DEL MAPA</button>
             <button class="btn">VER ESTACIONES</button>

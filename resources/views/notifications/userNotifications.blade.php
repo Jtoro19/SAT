@@ -11,11 +11,11 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <div class="container-fluid">
         <!-- Botón "Volver" alineado a la izquierda -->
-        <a class="btn btn-outline-primary" href="#">Volver</a>
+        <a class="btn btn-outline-primary" href="/userMap">Volver</a>
         
         <!-- Contenedor para centrar el texto -->
         <div class="mx-auto">
-          <a class="navbar-brand text-center" href="#">BIENVENIDO AL CENTRO DE NOTIFICACIONES</a>
+          <a class="navbar-brand text-center">BIENVENIDO AL CENTRO DE NOTIFICACIONES</a>
         </div>
         
         <!-- Formulario de búsqueda alineado a la derecha -->

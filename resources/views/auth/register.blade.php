@@ -1,61 +1,64 @@
-<x-guest-layout>
-    <form method="POST" action="{{ route('register') }}">
-        @csrf
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link href="{{ asset('css/registro.css') }}" rel="stylesheet">
+</head>
+<body>
+    <div class="main-container">
+        <div class="left-section">
+            <div class="content">
+                <h1>Bienvenido al sistema de alertas tempranas</h1>
+                <h3>Para iniciar sesión debes registrarte primero</h3>
+                
+                <form class="login-form" method="POST" action="{{ route('register') }}">
+                    @csrf
+                    <input type="text" placeholder="Nombre" name="name" value="{{ old('name') }}" required autofocus>
+                    @error('name')
+                        <div class="mt-2 text-red-500">{{ $message }}</div>
+                    @enderror
 
-        <!-- Name -->
-        <div>
-            <x-input-label for="name" :value="__('Name')" />
-            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus />
-            <x-input-error :messages="$errors->get('name')" class="mt-2" />
+                    <input type="text" placeholder="Correo" name="email" value="{{ old('email') }}" required>
+                    @error('email')
+                        <div class="mt-2 text-red-500">{{ $message }}</div>
+                    @enderror
+
+                    <input type="text" placeholder="Dirección" name="address" value="{{ old('address') }}" required>
+                    @error('address')
+                        <div class="mt-2 text-red-500">{{ $message }}</div>
+                    @enderror
+
+                    <input type="text" placeholder="Número de Teléfono" name="phoneNumber" value="{{ old('phoneNumber') }}" required>
+                    @error('phoneNumber')
+                        <div class="mt-2 text-red-500">{{ $message }}</div>
+                    @enderror
+                    
+                    <input type="password" placeholder="Contraseña" name="password" required>
+                    @error('password')
+                        <div class="mt-2 text-red-500">{{ $message }}</div>
+                    @enderror
+                    
+                    <input type="password" placeholder="Confirmar Contraseña" name="password_confirmation" required>
+                    @error('password_confirmation')
+                        <div class="mt-2 text-red-500">{{ $message }}</div>
+                    @enderror
+
+                    <input type="hidden" name="roleID" value="3">
+                    
+                    <button type="submit">Registrarse</button>
+                </form>
+                <a class="underline text-sm text-gray-600 hover:text-gray-900" href="{{ route('login') }}">
+                    ¿Ya estás registrado?
+                </a>
+            </div>
         </div>
-
-        <!-- Email -->
-        <div class="mt-4">
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+        <div class="right-section">
+            <img src="{{ asset('images/computador.png') }}" alt="Computador">
         </div>
+    </div>
+</body>
+</html>
 
-        <!-- Address -->
-        <div class="mt-4">
-            <x-input-label for="address" :value="__('Address')" />
-            <x-text-input id="address" class="block mt-1 w-full" type="text" name="address" :value="old('address')" required />
-            <x-input-error :messages="$errors->get('address')" class="mt-2" />
-        </div>
-
-        <!-- Phone Number -->
-        <div class="mt-4">
-            <x-input-label for="phoneNumber" :value="__('Phone Number')" />
-            <x-text-input id="phoneNumber" class="block mt-1 w-full" type="text" name="phoneNumber" :value="old('phoneNumber')" required />
-            <x-input-error :messages="$errors->get('phoneNumber')" class="mt-2" />
-        </div>
-
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-            <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" required />
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
-
-        <!-- Confirm Password -->
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
-            <x-text-input id="password_confirmation" class="block mt-1 w-full" type="password" name="password_confirmation" required />
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
-        </div>
-
-        <!-- Hidden Role ID -->
-        <input type="hidden" name="roleID" value="3">
-
-        <div class="flex items-center justify-end mt-4">
-            <a class="underline text-sm text-gray-600 hover:text-gray-900" href="{{ route('login') }}">
-                {{ __('Already registered?') }}
-            </a>
-
-            <x-primary-button class="ms-4">
-                {{ __('Register') }}
-            </x-primary-button>
-        </div>
-    </form>
-</x-guest-layout>
 
