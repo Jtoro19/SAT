@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Alert;
+use Illuminate\Support\Facades\Auth;
 
 class AlertsController extends Controller
 {
@@ -66,4 +67,24 @@ class AlertsController extends Controller
         return redirect()->route('alerts.index');
     }
     
+    public function showUserNotifications()
+    {
+        $user = Auth::user();
+        $lastSeen = $user->last_seen_notifications ?? now()->subDay();
+        
+        // Obtener las nuevas alertas desde la última vez que se vieron
+        $newAlerts = Alert::where('created_at', '>', $lastSeen)->get();
+        $newAlertsCount = $newAlerts->count();
+
+        return view('notifications.userNotifications', compact('newAlerts', 'newAlertsCount'));
+    }
+
+    public function resetNotifications()
+    {
+        $user = Auth::user();
+        $user->last_seen_notifications = now();
+        $user->save();
+
+        return response()->json(['status' => 'success']);
+    }
 }

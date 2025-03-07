@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\UsersController;
 use App\Http\Middleware\RoleMiddleware;
 
+
 // Página de inicio (acceso libre)
 Route::get('/', function () {
     return view('inicio');
@@ -59,9 +60,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/userMap', function () {
             return view('userMap');
         });
-        Route::get('/notifications/userNotifications', function () {
-            return view('notifications.userNotifications');
-        });
+        Route::get('/notifications/userNotifications', [AlertsController::class, 'showUserNotifications'])->name('notifications.userNotifications');
+        Route::post('/reset-notifications', [AlertsController::class, 'resetNotifications'])->name('resetNotifications');
+
     });
 
     Route::middleware(['role:Employee'])->group(function () {

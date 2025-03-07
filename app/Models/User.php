@@ -18,6 +18,7 @@ class User extends Authenticatable
         'address',
         'phoneNumber',
         'roleID',
+        'last_seen_notifications',
     ];
 
     protected $hidden = [
@@ -27,6 +28,7 @@ class User extends Authenticatable
 
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'last_seen_notifications' => 'datetime',
     ];
 
     // Relación con la tabla roles
