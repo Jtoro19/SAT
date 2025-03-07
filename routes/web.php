@@ -27,7 +27,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // Protecciones por Rol
-    Route::middleware(['role:Employee'])->group(function () {
+    Route::middleware(['role:Employee|Admin'])->group(function () {
         Route::get('/reports/index', [ReportsController::class, 'index'])->name('reports.index');
         Route::get('/analystMap', function () {
             return view('analystMap');
@@ -55,7 +55,7 @@ Route::middleware('auth')->group(function () {
         Route::delete('/users/{id}', [UsersController::class, 'destroy'])->name('users.destroy');
     });
 
-    Route::middleware(['role:Viewer'])->group(function () {
+    Route::middleware(['role:Viewer,Admin'])->group(function () {
         Route::get('/userMap', function () {
             return view('userMap');
         });
@@ -64,7 +64,7 @@ Route::middleware('auth')->group(function () {
         });
     });
 
-    Route::middleware(['role:Employee'])->group(function () {
+    Route::middleware(['role:Employee,Admin'])->group(function () {
         Route::get('/alerts/index', [AlertsController::class, 'index'])->name('alerts.index');
         Route::post('/alerts/store', [AlertsController::class, 'store'])->name('alerts.store');
         Route::get('/alerts/edit/{id}', [AlertsController::class, 'edit'])->name('alerts.edit');
