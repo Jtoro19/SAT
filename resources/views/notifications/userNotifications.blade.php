@@ -4,8 +4,26 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Notificaciones</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link href="{{ asset('css/map.css') }}" rel="stylesheet">
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('dropdownMenuButton').addEventListener('click', function () {
+          fetch('/reset-notifications', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            }
+          }).then(response => response.json()).then(data => {
+            if (data.status === 'success') {
+              document.getElementById('notificationBadge').style.display = 'none';
+            }
+          });
+        });
+      });
+    </script>
   </head>
   <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -18,11 +36,64 @@
           <a class="navbar-brand text-center">BIENVENIDO AL CENTRO DE NOTIFICACIONES</a>
         </div>
         
-        <!-- Formulario de búsqueda alineado a la derecha -->
-        <form class="d-flex">
-          <input class="form-control me-2" type="search" placeholder="Buscar" aria-label="Buscar">
-          <button class="btn btn-outline-success" type="submit">Buscar</button>
-        </form>
+        <!-- Botón de campanita con número de nuevos registros -->
+        <div class="d-flex align-items-center">
+          <div class="dropdown">
+            <button class="btn btn-outline-light btn-sm position-relative me-2 dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="bi bi-bell"></i>
+              @if($newAlertsCount > 0)
+                <span id="notificationBadge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                  {{ $newAlertsCount }}
+                  <span class="visually-hidden">nuevas alertas</span>
+                </span>
+              @endif
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+              @forelse($newAlerts as $alert)
+                <li>
+                  <span class="dropdown-item">
+                    Estación: {{ optional($alert->report)->stationID ?? 'Desconocida' }} - Intensidad: 
+                    @switch($alert->alertIntensity)
+                      @case(1)
+                        Gris
+                        @break
+                      @case(2)
+                        Amarillo
+                        @break
+                      @case(3)
+                        Naranja
+                        @break
+                      @case(4)
+                        Rojo
+                        @break
+                      @default
+                        Desconocida
+                    @endswitch
+                    - Tipo: 
+                    @switch($alert->type)
+                      @case(1)
+                        Deslizamiento
+                        @break
+                      @case(2)
+                        Inundación
+                        @break
+                      @default
+                        Desconocido
+                    @endswitch
+                  </span>
+                </li>
+              @empty
+                <li><span class="dropdown-item">No hay nuevas alertas</span></li>
+              @endforelse
+            </ul>
+          </div>
+          
+          <!-- Formulario de búsqueda alineado a la derecha -->
+          <form class="d-flex">
+            <input class="form-control me-2" type="search" placeholder="Buscar" aria-label="Buscar">
+            <button class="btn btn-outline-success" type="submit">Buscar</button>
+          </form>
+        </div>
       </div>
     </nav>
     
@@ -40,24 +111,77 @@
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>Notificación Gris 1</td>
-                  <td>Notificación Amarilla 1</td>
-                  <td>Notificación Naranja 1</td>
-                  <td>Notificación Roja 1</td>
-                </tr>
-                <tr>
-                  <td>Notificación Gris 2</td>
-                  <td>Notificación Amarilla 2</td>
-                  <td>Notificación Naranja 2</td>
-                  <td>Notificación Roja 2</td>
-                </tr>
-                <tr>
-                  <td>Notificación Gris 3</td>
-                  <td>Notificación Amarilla 3</td>
-                  <td>Notificación Naranja 3</td>
-                  <td>Notificación Roja 3</td>
-                </tr>
+                @php
+                  $grisAlerts = $alerts->where('alertIntensity', 1)->values();
+                  $amarilloAlerts = $alerts->where('alertIntensity', 2)->values();
+                  $naranjaAlerts = $alerts->where('alertIntensity', 3)->values();
+                  $rojoAlerts = $alerts->where('alertIntensity', 4)->values();
+                  $maxRows = max($grisAlerts->count(), $amarilloAlerts->count(), $naranjaAlerts->count(), $rojoAlerts->count());
+                @endphp
+                @for ($i = 0; $i < $maxRows; $i++)
+                  <tr>
+                    <td>
+                      @if (isset($grisAlerts[$i]))
+                        {{ optional($grisAlerts[$i]->report)->stationID ?? 'Desconocida' }} - 
+                        @switch($grisAlerts[$i]->type)
+                          @case(1)
+                            Deslizamiento
+                            @break
+                          @case(2)
+                            Inundación
+                            @break
+                          @default
+                            Desconocido
+                        @endswitch
+                      @endif
+                    </td>
+                    <td>
+                      @if (isset($amarilloAlerts[$i]))
+                        {{ optional($amarilloAlerts[$i]->report)->stationID ?? 'Desconocida' }} - 
+                        @switch($amarilloAlerts[$i]->type)
+                          @case(1)
+                            Deslizamiento
+                            @break
+                          @case(2)
+                            Inundación
+                            @break
+                          @default
+                            Desconocido
+                        @endswitch
+                      @endif
+                    </td>
+                    <td>
+                      @if (isset($naranjaAlerts[$i]))
+                        {{ optional($naranjaAlerts[$i]->report)->stationID ?? 'Desconocida' }} - 
+                        @switch($naranjaAlerts[$i]->type)
+                          @case(1)
+                            Deslizamiento
+                            @break
+                          @case(2)
+                            Inundación
+                            @break
+                          @default
+                            Desconocido
+                        @endswitch
+                      @endif
+                    </td>
+                    <td>
+                      @if (isset($rojoAlerts[$i]))
+                        {{ optional($rojoAlerts[$i]->report)->stationID ?? 'Desconocida' }} - 
+                        @switch($rojoAlerts[$i]->type)
+                          @case(1)
+                            Deslizamiento
+                            @break
+                          @case(2)
+                            Inundación
+                            @break
+                          @default
+                            Desconocido
+                        @endswitch
+                      @endif
+                    </td>
+                  </tr>
+                @endfor
               </tbody>
             </table>
           </div>
