@@ -5,22 +5,33 @@ namespace App\Providers;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
 
 class RouteServiceProvider extends ServiceProvider
 {
     /**
-     * The path to the "home" route for your application.
-     *
-     * Typically, users are redirected here after authentication.
-     *
-     * @var string
+     * Redirección dinámica según el rol del usuario autenticado.
      */
-    public const HOME = '/dashboard';
+    public static function home()
+    {
+        $user = Auth::user();
+        
+        if (!$user) {
+            return '/dashboard'; // Redirección por defecto
+        }
+
+        return match ($user->roleID) {
+            1 => '/adminView',    // Admin
+            2 => '/analystMap',   // Employee
+            3 => '/userMap',      // Viewer
+            default => '/dashboard',
+        };
+    }
 
     /**
-     * Define your route model bindings, pattern filters, and other route configuration.
+     * Define tus bindings de rutas y configuraciones.
      */
     public function boot(): void
     {
@@ -37,7 +48,7 @@ class RouteServiceProvider extends ServiceProvider
     }
 
     /**
-     * Configure the rate limiters for the application.
+     * Configurar limitadores de tasa.
      */
     protected function configureRateLimiting(): void
     {
