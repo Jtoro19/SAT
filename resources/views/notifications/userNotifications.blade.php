@@ -52,7 +52,7 @@
               @forelse($newAlerts as $alert)
                 <li>
                   <span class="dropdown-item">
-                    Estación: {{ optional($alert->station)->name ?? 'Desconocida' }} - Intensidad: 
+                    Estación: {{ optional($alert->report)->stationID ?? 'Desconocida' }} - Intensidad: 
                     @switch($alert->alertIntensity)
                       @case(1)
                         Gris
@@ -111,24 +111,77 @@
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>Notificación Gris 1</td>
-                  <td>Notificación Amarilla 1</td>
-                  <td>Notificación Naranja 1</td>
-                  <td>Notificación Roja 1</td>
-                </tr>
-                <tr>
-                  <td>Notificación Gris 2</td>
-                  <td>Notificación Amarilla 2</td>
-                  <td>Notificación Naranja 2</td>
-                  <td>Notificación Roja 2</td>
-                </tr>
-                <tr>
-                  <td>Notificación Gris 3</td>
-                  <td>Notificación Amarilla 3</td>
-                  <td>Notificación Naranja 3</td>
-                  <td>Notificación Roja 3</td>
-                </tr>
+                @php
+                  $grisAlerts = $alerts->where('alertIntensity', 1)->values();
+                  $amarilloAlerts = $alerts->where('alertIntensity', 2)->values();
+                  $naranjaAlerts = $alerts->where('alertIntensity', 3)->values();
+                  $rojoAlerts = $alerts->where('alertIntensity', 4)->values();
+                  $maxRows = max($grisAlerts->count(), $amarilloAlerts->count(), $naranjaAlerts->count(), $rojoAlerts->count());
+                @endphp
+                @for ($i = 0; $i < $maxRows; $i++)
+                  <tr>
+                    <td>
+                      @if (isset($grisAlerts[$i]))
+                        {{ optional($grisAlerts[$i]->report)->stationID ?? 'Desconocida' }} - 
+                        @switch($grisAlerts[$i]->type)
+                          @case(1)
+                            Deslizamiento
+                            @break
+                          @case(2)
+                            Inundación
+                            @break
+                          @default
+                            Desconocido
+                        @endswitch
+                      @endif
+                    </td>
+                    <td>
+                      @if (isset($amarilloAlerts[$i]))
+                        {{ optional($amarilloAlerts[$i]->report)->stationID ?? 'Desconocida' }} - 
+                        @switch($amarilloAlerts[$i]->type)
+                          @case(1)
+                            Deslizamiento
+                            @break
+                          @case(2)
+                            Inundación
+                            @break
+                          @default
+                            Desconocido
+                        @endswitch
+                      @endif
+                    </td>
+                    <td>
+                      @if (isset($naranjaAlerts[$i]))
+                        {{ optional($naranjaAlerts[$i]->report)->stationID ?? 'Desconocida' }} - 
+                        @switch($naranjaAlerts[$i]->type)
+                          @case(1)
+                            Deslizamiento
+                            @break
+                          @case(2)
+                            Inundación
+                            @break
+                          @default
+                            Desconocido
+                        @endswitch
+                      @endif
+                    </td>
+                    <td>
+                      @if (isset($rojoAlerts[$i]))
+                        {{ optional($rojoAlerts[$i]->report)->stationID ?? 'Desconocida' }} - 
+                        @switch($rojoAlerts[$i]->type)
+                          @case(1)
+                            Deslizamiento
+                            @break
+                          @case(2)
+                            Inundación
+                            @break
+                          @default
+                            Desconocido
+                        @endswitch
+                      @endif
+                    </td>
+                  </tr>
+                @endfor
               </tbody>
             </table>
           </div>

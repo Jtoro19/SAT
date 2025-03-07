@@ -75,8 +75,9 @@ class AlertsController extends Controller
         // Obtener las nuevas alertas desde la última vez que se vieron
         $newAlerts = Alert::where('created_at', '>', $lastSeen)->get();
         $newAlertsCount = $newAlerts->count();
+        $alerts = Alert::all();
 
-        return view('notifications.userNotifications', compact('newAlerts', 'newAlertsCount'));
+        return view('notifications.userNotifications', compact('newAlerts', 'newAlertsCount', 'alerts'));
     }
 
     public function resetNotifications()
